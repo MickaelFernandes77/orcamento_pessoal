@@ -52,6 +52,28 @@ class Bd{
         // atualiza o valor de id(do local storage, que vem da func constructor()), com o novo valor do id(que é recebido pela func proximoID)
         localStorage.setItem('id', id)
     }
+
+    // função que recupera todos os registros de localStorage
+    recuperarTodosRegistros(){
+        // array de despesas
+        let despesas = Array();
+
+        let id = localStorage.getItem('id');
+        // recuperar todas as despesas de localStorage
+        for(let i = 1; i <= id; i++){
+            // recuperar despesa. mas antes a converte de json para objeto literal
+            let despesa = JSON.parse(localStorage.getItem(i));
+
+            // se uma despesa for null, não será inserida no array de despesas.
+            if(despesa === null){
+                // continue: pula a interação, indo para a proxima interação
+                continue
+            }
+            // adicionando as despesas no array de despesas.
+            despesas.push(despesa);
+        }
+        return despesas;
+    }
 }
 
 // instância do objeto BD
@@ -76,7 +98,7 @@ function cadastrarDespesa(){
         descricao.value,
         valor.value
     )
-    
+
     // condição para verificar se todos os dados estão devidamente preenchidos.
     // se true, exibe o dialog de sucesso, se false, dialog de erro.
     if(despesa.validarDados() === true){
@@ -105,5 +127,13 @@ function cadastrarDespesa(){
 
     
     }
-    
+}
+
+function carregaListaDespesas(){
+
+    let despesas = Array();
+    // o array despesas, recebe o outro array despesas, da função recuperarTodosRegistros.
+    despesas = bd.recuperarTodosRegistros();
+
+    console.log(despesas)
 }
