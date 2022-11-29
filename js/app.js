@@ -74,6 +74,10 @@ class Bd{
         }
         return despesas;
     }
+
+    pesquisar(despesa){
+        console.log(despesa)
+    }
 }
 
 // instância do objeto BD
@@ -136,8 +140,8 @@ function cadastrarDespesa(){
     }
 }
 
+// funçao que carrega as despesas
 function carregaListaDespesas(){
-
     let despesas = Array();
     // o array despesas, recebe o outro array despesas, da função recuperarTodosRegistros.
     despesas = bd.recuperarTodosRegistros();
@@ -147,7 +151,6 @@ function carregaListaDespesas(){
 
     // percorrendo o array despesas, listando cada despesa de forma dinamica
     despesas.forEach(function(d){
-        console.log(d);
         // criando tr da tabela
         let linha = listaDespesas.insertRow();
         // criando colunas da tabela, e adicionando os valores do array na interface
@@ -170,5 +173,25 @@ function carregaListaDespesas(){
         linha.insertCell(3).innerHTML = d.valor;
 
     })
+}
+
+// função usada para pesquisar e/ou filtrar as despesas
+function pesquisarDespesa(){
+    // variaveis de manipulação de interface, referenciadas atraves do id.
+    let ano = document.getElementById('ano').value;
+    let mes = document.getElementById('mes').value;
+    let dia = document.getElementById('dia').value;
+    let tipo = document.getElementById('tipo').value;
+    let descricao = document.getElementById('descricao').value;
+    let valor = document.getElementById('valor').value;
+
+    // instância do objeto Despesa
+    // instância do objeto despesa
+    let despesa = new Despesa(
+        // valores das variaveis que são recebidas através do ID
+        ano, mes, dia, tipo, descricao, valor
+    )
+    // uso da func pesquisa, que vem do objeto BD.
+    bd.pesquisar(despesa); 
 
 }
