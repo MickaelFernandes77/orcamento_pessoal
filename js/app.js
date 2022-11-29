@@ -103,7 +103,7 @@ function cadastrarDespesa(){
     // se true, exibe o dialog de sucesso, se false, dialog de erro.
     if(despesa.validarDados() === true){
         // uso da função gravar, que vem do objeto BD. E recebe a var despesa que é a instância do obj despesa como param
-        // bd.gravar(despesa);
+        bd.gravar(despesa);
 
         // dialog de sucesso
         $('#registraDespesa').modal('show')
@@ -114,6 +114,15 @@ function cadastrarDespesa(){
         document.querySelector('#titulo_div').innerHTML = 'Despesa Inserida com Sucesso'; 
         document.querySelector('#mensagem_modal').innerHTML = 'Sua nova despesa foi adicionada aos registros.';
         document.querySelector('#btnFechar').innerHTML = 'Fechar';   
+
+        // limpando os inputs de inserção
+        ano.value = '';
+        mes.value = ''; 
+        dia.value = '';
+        tipo.value = '' 
+        descricao.value = ''; 
+        valor.value = '';
+
     }else{
         // dialog de erro
         $('#registraDespesa').modal('show')
@@ -124,8 +133,6 @@ function cadastrarDespesa(){
         document.querySelector('#titulo_div').innerHTML = 'Erro Na Gravação da Despesa'; 
         document.querySelector('#mensagem_modal').innerHTML = ' Existem campos que não foram preenchidos. Por favor, preencha todos.';
         document.querySelector('#btnFechar').innerHTML = 'Fechar';
-
-    
     }
 }
 
@@ -135,5 +142,33 @@ function carregaListaDespesas(){
     // o array despesas, recebe o outro array despesas, da função recuperarTodosRegistros.
     despesas = bd.recuperarTodosRegistros();
 
-    console.log(despesas)
+    // elemento tbody da tabela
+    let listaDespesas = document.getElementById('listaDespesas');
+
+    // percorrendo o array despesas, listando cada despesa de forma dinamica
+    despesas.forEach(function(d){
+        console.log(d);
+        // criando tr da tabela
+        let linha = listaDespesas.insertRow();
+        // criando colunas da tabela, e adicionando os valores do array na interface
+        linha.insertCell(0).innerHTML = `${d.dia}/${d.mes}/${d.ano}`;
+        // ajuste da exibição do tipo da despesa
+        switch(d.tipo){
+            case '1': d.tipo = 'Alimentação';
+                break;
+            case '2': d.tipo = 'Educação';
+                break;
+            case '3': d.tipo = 'Lazer';
+                break;
+            case '4': d.tipo = 'Saúde';
+                break;        
+            case '5': d.tipo = 'Transporte';
+                break;        
+        }
+        linha.insertCell(1).innerHTML = d.tipo;
+        linha.insertCell(2).innerHTML = d.descricao;
+        linha.insertCell(3).innerHTML = d.valor;
+
+    })
+
 }
