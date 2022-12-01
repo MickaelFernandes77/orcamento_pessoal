@@ -75,8 +75,39 @@ class Bd{
         return despesas;
     }
 
+    // função que faz a pesquisa filtrada de despesas
     pesquisar(despesa){
-        console.log(despesa)
+        let despesasFiltradas = Array();
+        despesasFiltradas = this.recuperarTodosRegistros();
+
+        // filtros de ano
+        // se for diferente de vazio, realiza o filtro do ano pesquisado pelo usuario
+        if(despesa.ano != ''){
+            // o valor recebido pelo filter não atua no array original, então para pegar o resultado, é necessário sobrepor o array
+            despesasFiltradas = despesasFiltradas.filter(d => d.ano == despesa.ano);
+        }
+        // filtros de mes 
+        if(despesa.mes != ''){
+            despesasFiltradas = despesasFiltradas.filter(d => d.mes == despesa.mes);
+        }
+        // filtros de dia
+        if(despesa.dia != ''){
+            despesasFiltradas = despesasFiltradas.filter(d => d.dia == despesa.dia);
+        }
+        // filtros de descricao
+        if(despesa.descricao != ''){
+            despesasFiltradas = despesasFiltradas.filter(d => d.descricao == despesa.descricao);
+        }
+        // filtros de tipo
+        if(despesa.tipo != ''){
+            despesasFiltradas = despesasFiltradas.filter(d => d.tipo == despesa.tipo);
+        }
+        // filtros de valor
+        if(despesa.valor != ''){
+            despesasFiltradas = despesasFiltradas.filter(d => d.valor == despesa.valor);
+        }
+
+        return despesasFiltradas
     }
 }
 
@@ -140,14 +171,19 @@ function cadastrarDespesa(){
     }
 }
 
-// funçao que carrega as despesas
-function carregaListaDespesas(){
-    let despesas = Array();
-    // o array despesas, recebe o outro array despesas, da função recuperarTodosRegistros.
+// funçao que carrega as despesas e a coloca na view consulta.html
+// recebe um array como um valor padrão, para caso de uso da função de pesquisar que realiza o filtro. Se não usarmos o filtro, retorna todos as despesas de LocalStorage.
+function carregaListaDespesas(despesas = Array(), filtro = false){
+    // se for igual a 0, significa que o array despesas está vazio, ou seja sem filtro. Se não for igual a 0 um filtro estará acontecendo.
+    if(despesas.length == 0 && filtro == false){
+    // o array despesas(que está como padrão), recebe o outro array despesas, da função recuperarTodosRegistros.
     despesas = bd.recuperarTodosRegistros();
+    }
 
-    // elemento tbody da tabela
+    // elemento tbody da tabela da view consulta.html
     let listaDespesas = document.getElementById('listaDespesas');
+    // limpando o tbody da view consulta.html
+    listaDespesas.innerHTML = '';
 
     // percorrendo o array despesas, listando cada despesa de forma dinamica
     despesas.forEach(function(d){
@@ -186,12 +222,13 @@ function pesquisarDespesa(){
     let valor = document.getElementById('valor').value;
 
     // instância do objeto Despesa
-    // instância do objeto despesa
     let despesa = new Despesa(
         // valores das variaveis que são recebidas através do ID
         ano, mes, dia, tipo, descricao, valor
     )
-    // uso da func pesquisa, que vem do objeto BD.
-    bd.pesquisar(despesa); 
+    // variavel que recebe o uso da função pesquisar(que retorna o array de despesas com filtros que são passados pelo usuário)
+    let despesas  = bd.pesquisar(despesa)
+    // enviando a lista de despesas filtradas, para a função carrega lista despesas. e trocando o valor de filter para true.
+    carregaListaDespesas(despesas, true);
 
 }
