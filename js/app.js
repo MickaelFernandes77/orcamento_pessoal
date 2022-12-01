@@ -69,6 +69,8 @@ class Bd{
                 // continue: pula a interação, indo para a proxima interação
                 continue
             }
+            // add o elemento i, que passa pelo id. gerando um elemento id no objeto.
+            despesa.id = i;
             // adicionando as despesas no array de despesas.
             despesas.push(despesa);
         }
@@ -109,6 +111,11 @@ class Bd{
 
         return despesasFiltradas
     }
+
+    // funcão que remove uma despesa
+    remover(id){
+        localStorage.removeItem(id);
+    }
 }
 
 // instância do objeto BD
@@ -147,7 +154,7 @@ function cadastrarDespesa(){
         document.querySelector('#btnFechar').className = 'btn btn-success';
 
         document.querySelector('#titulo_div').innerHTML = 'Despesa Inserida com Sucesso'; 
-        document.querySelector('#mensagem_modal').innerHTML = 'Sua nova despesa foi adicionada aos registros.';
+        document.querySelector('#mensagem_modal').innerHTML = 'Sua nova despesa foi adicionada a lista de despesas.';
         document.querySelector('#btnFechar').innerHTML = 'Fechar';   
 
         // limpando os inputs de inserção
@@ -157,7 +164,6 @@ function cadastrarDespesa(){
         tipo.value = '' 
         descricao.value = ''; 
         valor.value = '';
-
     }else{
         // dialog de erro
         $('#registraDespesa').modal('show')
@@ -208,6 +214,32 @@ function carregaListaDespesas(despesas = Array(), filtro = false){
         linha.insertCell(2).innerHTML = d.descricao;
         linha.insertCell(3).innerHTML = d.valor;
 
+        // criar o botão de exclusão
+        let btn = document.createElement('button');
+        btn.className = 'btn btn-danger';
+        btn.innerHTML ='<i class="fas fa-times"></i>';
+        // adicionando um texto ao id, para evitar conflitos internos com a execução do id da armazenado em localstorage.
+        btn.id = `id_despesa_${d.id}`;
+        btn.onclick = function(){
+            // removendo a parte a esquerda do identificador do id, para obter apenas o valor do id respectivo.
+            let id = this.id.replace('id_despesa_', '');
+            
+            // dialog de deleção
+            $('#deletaDespesa').modal('show')
+            document.querySelector('#modal_titulo_div').className = 'modal-header text-success';
+            document.querySelector('#mensagem_modal').className = 'modal-body';
+            document.querySelector('#btnFechar').className = 'btn btn-success';
+            document.querySelector('#titulo_div').innerHTML = 'Despesa Deletada com Sucesso'; 
+            document.querySelector('#mensagem_modal').innerHTML = 'Sua despesa foi deletada da lista de despesas.';            
+            document.querySelector('#btnFechar').innerHTML = 'Fechar'; 
+            // adição da função para refresh na página.
+            document.querySelector('#btnFechar').onclick = function(){
+                window.location.reload();
+            };
+            // uso da função de remover, do objeto BD.
+            bd.remover(id);
+        }
+        linha.insertCell(4).append(btn);
     })
 }
 
@@ -230,5 +262,4 @@ function pesquisarDespesa(){
     let despesas  = bd.pesquisar(despesa)
     // enviando a lista de despesas filtradas, para a função carrega lista despesas. e trocando o valor de filter para true.
     carregaListaDespesas(despesas, true);
-
 }
