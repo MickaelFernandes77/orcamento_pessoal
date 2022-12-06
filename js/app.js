@@ -299,11 +299,16 @@ function recuperaValorMes() {
   // array de despesas, que recebe o retorno dos registros da função bd, recuperar todos registros.
   let despesas = Array();
   despesas = bd.recuperarTodosRegistros();
+  console.log(despesas);
+
   // var que recebe o valor filtrado do mês
   let valorMes = 0;
   // selects dos formulários
   let anoSelect = document.querySelector("#ano").value;
   let mesSelect = document.querySelector("#mes").value;
+
+  console.log(anoSelect);
+  console.log(mesSelect);
 
   // tds da tabela, onde serão colocados os resultados dos filtros.
   let tbl_ano = document.getElementById("tbl_ano");
@@ -311,9 +316,9 @@ function recuperaValorMes() {
   let tbl_valor = document.getElementById("tbl_valor");
 
   for (i = 0; i < despesas.length; i++) {
-    // se o input de ano ou mês estiver vazio, exibe o dialog de erro.
+    // // se o input de ano ou mês estiver vazio, exibe o dialog de erro.
     if (anoSelect == "" || mesSelect == "") {
-        // dialog de campos incompletos dos inputs de ano e mês
+      // dialog de campos incompletos dos inputs de ano e mês
       $("#erroDespesa").modal("show");
       document.querySelector("#modal_titulo_div").className =
         "modal-header text-danger";
@@ -323,13 +328,15 @@ function recuperaValorMes() {
         "Preencha Todos os Campos";
       document.querySelector("#mensagem_modal").innerHTML =
         "Preencha os campos de ano e de mês corretamente.";
-      document.querySelector("#btnFechar").innerHTML = "Fechar";  
-    } 
+      document.querySelector("#btnFechar").innerHTML = "Fechar";
+    }
     // filtro do ano. comparando se o valor do ano e do array são iguais.
-    else if ((anoSelect == 2022 && despesas[i].ano == 2022) ||
-    (anoSelect == 2023 && despesas[i].ano == 2023) ||
-    (anoSelect == 2024 && despesas[i].ano == 2024) ||
-    (anoSelect == 2025 && despesas[i].ano == 2025)) {
+    if (
+      (anoSelect == 2022 && despesas[i].ano == 2022) ||
+      (anoSelect == 2023 && despesas[i].ano == 2023) ||
+      (anoSelect == 2024 && despesas[i].ano == 2024) ||
+      (anoSelect == 2025 && despesas[i].ano == 2025)
+    ) {
       if (
         (mesSelect == 1 && despesas[i].mes == 1) ||
         (mesSelect == 2 && despesas[i].mes == 2) ||
@@ -339,10 +346,10 @@ function recuperaValorMes() {
         (mesSelect == 6 && despesas[i].mes == 6) ||
         (mesSelect == 7 && despesas[i].mes == 7) ||
         (mesSelect == 8 && despesas[i].mes == 8) ||
-        (mesSelect == 8 && despesas[i].mes == 9) ||
-        (mesSelect == 8 && despesas[i].mes == 10) ||
-        (mesSelect == 8 && despesas[i].mes == 11) ||
-        (mesSelect == 8 && despesas[i].mes == 12)
+        (mesSelect == 9 && despesas[i].mes == 9) ||
+        (mesSelect == 10 && despesas[i].mes == 10) ||
+        (mesSelect == 11 && despesas[i].mes == 11) ||
+        (mesSelect == 12 && despesas[i].mes == 12)
       ) {
         // valor do mês
         valorMes += parseFloat(despesas[i].valor);
